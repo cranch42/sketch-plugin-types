@@ -1,0 +1,64 @@
+{
+  "name": "sketch-plugin-types",
+  "version": "0.1.1",
+  "description": "TypeScript type definitions for the Sketch app plugin API (sketch/dom, sketch/ui, sketch/settings, sketch/async, sketch/data-supplier) and the Action API.",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./globals": {
+      "types": "./types/globals.d.ts"
+    },
+    "./manifest": {
+      "types": "./types/manifest.d.ts"
+    },
+    "./actions": {
+      "types": "./types/actions.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "globals": ["types/globals.d.ts"],
+      "manifest": ["types/manifest.d.ts"],
+      "actions": ["types/actions.d.ts"]
+    }
+  },
+  "files": [
+    "index.d.ts",
+    "types/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "sketch",
+    "sketch-app",
+    "sketch-plugin",
+    "skpm",
+    "typescript",
+    "types",
+    "typings",
+    "cocoascript"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p test/tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "license": "MIT",
+  "author": "Nick",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cranch42/sketch-plugin-types.git"
+  },
+  "homepage": "https://github.com/cranch42/sketch-plugin-types#readme",
+  "bugs": {
+    "url": "https://github.com/cranch42/sketch-plugin-types/issues"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

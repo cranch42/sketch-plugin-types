@@ -1,0 +1,23 @@
+{
+  "name": "Hello World",
+  "identifier": "com.example.sketch-plugin-types.hello-world",
+  "version": "0.1.0",
+  "description": "Inserts a frame with centered 'Hello, World!' text.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Hello World",
+      "identifier": "com.example.sketch-plugin-types.hello-world.run",
+      "script": "hello-world.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt h"
+    }
+  ],
+  "menu": {
+    "title": "Hello World",
+    "items": ["com.example.sketch-plugin-types.hello-world.run"]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Rename Example",
+  "identifier": "com.example.sketch-plugin-types.rename",
+  "version": "0.1.0",
+  "description": "Batch-renames the current selection with a template.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Rename Selection",
+      "identifier": "com.example.sketch-plugin-types.rename.run",
+      "script": "rename.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt 4"
+    }
+  ],
+  "menu": {
+    "title": "Rename Example",
+    "items": ["com.example.sketch-plugin-types.rename.run"]
+  }
+}

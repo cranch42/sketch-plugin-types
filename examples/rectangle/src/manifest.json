@@ -1,0 +1,23 @@
+{
+  "name": "Rectangle Example",
+  "identifier": "com.example.sketch-plugin-types.rectangle",
+  "version": "0.1.0",
+  "description": "Creates a blue rectangle on the current page.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Create Blue Rectangle",
+      "identifier": "com.example.sketch-plugin-types.rectangle.run",
+      "script": "rectangle.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt 1"
+    }
+  ],
+  "menu": {
+    "title": "Rectangle Example",
+    "items": ["com.example.sketch-plugin-types.rectangle.run"]
+  }
+}

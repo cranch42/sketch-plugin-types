@@ -1,0 +1,26 @@
+{
+  "name": "Watch Selection Example",
+  "identifier": "com.example.sketch-plugin-types.watch-selection",
+  "version": "0.1.0",
+  "description": "Shows a toast whenever the selection changes (Action API handler).",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Watch Selection",
+      "identifier": "com.example.sketch-plugin-types.watch-selection.run",
+      "script": "watch.js",
+      "handlers": {
+        "actions": {
+          "SelectionChanged.finish": "onSelectionChanged"
+        }
+      }
+    }
+  ],
+  "menu": {
+    "title": "Watch Selection Example",
+    "items": ["com.example.sketch-plugin-types.watch-selection.run"]
+  }
+}

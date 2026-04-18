@@ -1,0 +1,23 @@
+{
+  "name": "Grid Example",
+  "identifier": "com.example.sketch-plugin-types.grid",
+  "version": "0.1.0",
+  "description": "Creates a 4x3 grid of colored rectangles inside a Frame.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Create 4x3 Grid",
+      "identifier": "com.example.sketch-plugin-types.grid.run",
+      "script": "grid.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt 2"
+    }
+  ],
+  "menu": {
+    "title": "Grid Example",
+    "items": ["com.example.sketch-plugin-types.grid.run"]
+  }
+}

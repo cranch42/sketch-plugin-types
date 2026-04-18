@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "paths": {
+      "sketch-plugin-types": ["../index.d.ts"],
+      "sketch-plugin-types/globals": ["../types/globals.d.ts"],
+      "sketch-plugin-types/manifest": ["../types/manifest.d.ts"],
+      "sketch-plugin-types/actions": ["../types/actions.d.ts"]
+    }
+  },
+  "include": ["../index.d.ts", "../types/**/*.d.ts", "**/*.ts"]
+}

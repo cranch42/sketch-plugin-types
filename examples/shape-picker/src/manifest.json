@@ -1,0 +1,23 @@
+{
+  "name": "Shape Picker Example",
+  "identifier": "com.example.sketch-plugin-types.shape-picker",
+  "version": "0.1.0",
+  "description": "Asks which shape to insert via a dropdown dialog.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Pick a Shape",
+      "identifier": "com.example.sketch-plugin-types.shape-picker.run",
+      "script": "shape-picker.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt 3"
+    }
+  ],
+  "menu": {
+    "title": "Shape Picker Example",
+    "items": ["com.example.sketch-plugin-types.shape-picker.run"]
+  }
+}
