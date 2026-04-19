@@ -1,6 +1,6 @@
 {
   "name": "sketch-plugin-types",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "TypeScript type definitions for the Sketch app plugin API (sketch/dom, sketch/ui, sketch/settings, sketch/async, sketch/data-supplier) and the Action API.",
   "types": "index.d.ts",
   "exports": {
@@ -15,19 +15,28 @@
     },
     "./actions": {
       "types": "./types/actions.d.ts"
+    },
+    "./skpm": {
+      "types": "./types/skpm/index.d.ts"
     }
   },
   "typesVersions": {
     "*": {
       "globals": ["types/globals.d.ts"],
       "manifest": ["types/manifest.d.ts"],
-      "actions": ["types/actions.d.ts"]
+      "actions": ["types/actions.d.ts"],
+      "skpm": ["types/skpm/index.d.ts"]
     }
+  },
+  "bin": {
+    "build-manifest": "scripts/build-manifest.js"
   },
   "files": [
     "index.d.ts",
     "types/",
+    "scripts/",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "keywords": [

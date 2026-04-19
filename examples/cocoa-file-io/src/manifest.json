@@ -1,0 +1,23 @@
+{
+  "name": "Cocoa File I/O",
+  "identifier": "com.example.sketch-plugin-types.cocoa-file-io",
+  "version": "0.1.0",
+  "description": "Exports the selected layer as a PNG to ~/Desktop using NSFileManager.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Export Selection to Desktop",
+      "identifier": "com.example.sketch-plugin-types.cocoa-file-io.export",
+      "script": "export-selection.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt e"
+    }
+  ],
+  "menu": {
+    "title": "Cocoa File I/O",
+    "items": ["com.example.sketch-plugin-types.cocoa-file-io.export"]
+  }
+}

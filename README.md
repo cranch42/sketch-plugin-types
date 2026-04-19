@@ -234,6 +234,18 @@ import type { SketchManifest } from 'sketch-plugin-types';
 const manifest: SketchManifest = require('./manifest.json');
 ```
 
+### Emitting `manifest.json` from a TypeScript source
+
+If you author the manifest in `.ts`, you still need a `manifest.json` on disk for Sketch to read. This package ships a tiny CLI that runs your TS module and writes the JSON:
+
+```sh
+npx build-manifest src/manifest.ts --out build/manifest.json
+```
+
+- Input: a `.ts` / `.tsx` / `.js` / `.mjs` / `.cjs` module whose default export is a `SketchManifest` value (or a zero-arg function returning one).
+- `--out` defaults to `manifest.json` next to the input.
+- TypeScript sources require `tsx` or `ts-node` in the plugin project's `devDependencies`; JS sources run directly. Add it to your build step or a `prebuild` script.
+
 ---
 
 ## Listening to Sketch events (actions)
@@ -270,6 +282,27 @@ These twelve are documented and fully typed:
 `OpenDocument`, `CloseDocument`, `Startup`, `Shutdown`, `SelectionChanged`, `LayersMoved`, `LayersResized`, `TextChanged`, `ArtboardChanged`, `DocumentSaved`, `HandleURL`, `ExportSlices`
 
 The other 311 action names are valid (autocomplete in the manifest), but their `actionContext` is `unknown` because Sketch does not publish the shape.
+
+### Adding your own payload types
+
+If you have reverse-engineered an action's payload, you can plug it into the map with declaration merging and get the same narrowing as the built-in twelve:
+
+```ts
+// src/sketch-actions.d.ts
+import 'sketch-plugin-types';
+
+declare module 'sketch-plugin-types' {
+  interface SketchActionContextMap {
+    LayersGrouped: {
+      document: import('sketch/dom').Document;
+      group: import('sketch/dom').Group;
+      layers: import('sketch/dom').Layer[];
+    };
+  }
+}
+```
+
+After that, `SketchActionHandler<'LayersGrouped'>` narrows `ctx.actionContext` to your interface. PRs welcome — if you have confirmed a payload in a current Sketch build, it can graduate into the package itself.
 
 ---
 
@@ -374,9 +407,45 @@ These modules are provided by Sketch itself at runtime. Your bundler (skpm or ot
 
 ---
 
+## Calling Cocoa / Objective-C APIs
+
+Plugins routinely drop into Cocoa for file I/O, image encoding, or URL handling. The package ships typed instance and class interfaces for a small, high-traffic subset of Foundation: `NSString`, `NSURL`, `NSData`, `NSImage`, `NSBitmapImageRep`, `NSFileManager`. Selector names are mapped to JS by replacing each `:` with `_`, matching how CocoaScript bridges them.
+
+`NSClassFromString` is overloaded for these classes, so the returned class object is typed — no `as` cast needed:
+
+```ts
+const NSImage = NSClassFromString('NSImage');            // SketchNative.NSImageClass
+const NSData = NSClassFromString('NSData');              // SketchNative.NSDataClass
+const NSFileManager = NSClassFromString('NSFileManager'); // SketchNative.NSFileManagerClass
+
+const img = NSImage.alloc().initWithContentsOfFile_('/tmp/pic.png');
+if (img) log(img.size().width, img.size().height);
+```
+
+For anything else, `NSClassFromString` falls back to `unknown`; cast it yourself. If you want exhaustive Apple types, install [`cocoascript-types`](https://www.npmjs.com/package/cocoascript-types) as a peer dev dep and declaration merging will supersede the opaque placeholders this package ships.
+
+---
+
+## Using skpm's polyfilled core modules
+
+`@skpm/builder` bundles small polyfills for `buffer`, `path`, `crypto`, `stream`, `util`, `events`, `url`, and `assert` — enough to let third-party deps that were written for Node run inside a Sketch plugin. Opt in to the types once, globally:
+
+```ts
+// src/env.d.ts
+/// <reference types="sketch-plugin-types" />
+import 'sketch-plugin-types/globals';
+import 'sketch-plugin-types/skpm';
+```
+
+Then `import * as path from 'path'`, `const { Buffer } = require('buffer')`, etc. resolve with types. Do not install `@types/node` for this — skpm's polyfill surface is deliberately narrower than Node's, and `@types/node` will over-promise methods that blow up at runtime.
+
+`fs` is intentionally absent — skpm does not polyfill it. Use `NSFileManager` via the Cocoa section above.
+
+---
+
 ## Examples
 
-The [`examples/`](./examples/) directory contains six standalone Sketch plugins, each in its own folder with a `package.json`, `tsconfig.json`, and a build script. Every example can be built and installed independently:
+The [`examples/`](./examples/) directory contains seven standalone Sketch plugins, each in its own folder with a `package.json`, `tsconfig.json`, and a build script. Every example can be built and installed independently:
 
 ```sh
 cd examples/hello-world
@@ -393,6 +462,7 @@ npm run install-plugin   # copies the .sketchplugin into Sketch's plugin folder
 | [`shape-picker`](./examples/shape-picker/) | Asks which shape to insert via a dropdown | `UI.getInputFromUser` with `type: 'selection'` |
 | [`rename`](./examples/rename/) | Batch-renames the selection with a template | `Selection` iteration, `UI.getInputFromUser` with `type: 'string'` |
 | [`watch-selection`](./examples/watch-selection/) | Shows a toast on every selection change | Action API handler, `SketchActionHandler<'SelectionChanged'>` |
+| [`cocoa-file-io`](./examples/cocoa-file-io/) | Exports the selected layer as PNG under `~/Desktop` | `NSFileManager`, `NSString`, `NSURL`, overloaded `NSClassFromString`, `MOPointer` for error out-params |
 
 Each example uses plain `tsc` + a small [`scripts/bundle.js`](./examples/hello-world/scripts/bundle.js) shim (no skpm required). See [Building a plugin > Option B](#option-b-plain-tsc) for details on why the shim is needed.
 

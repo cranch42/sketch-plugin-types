@@ -87,7 +87,19 @@ declare global {
      */
     const MOJSObject: unknown;
 
-    /** Cocoa reflection. */
+    /**
+     * Cocoa reflection. Returns the class object for a given Objective-C
+     * class name. Overloaded for the Foundation classes that ship with
+     * typed instance / class interfaces under `SketchNative.*`. Anything
+     * not listed falls through to the trailing `string` overload and
+     * stays `unknown` — cast it yourself when you know the shape.
+     */
+    function NSClassFromString(name: 'NSImage'): SketchNative.NSImageClass;
+    function NSClassFromString(name: 'NSData'): SketchNative.NSDataClass;
+    function NSClassFromString(name: 'NSURL'): SketchNative.NSURLClass;
+    function NSClassFromString(name: 'NSString'): SketchNative.NSStringClass;
+    function NSClassFromString(name: 'NSFileManager'): SketchNative.NSFileManagerClass;
+    function NSClassFromString(name: 'NSBitmapImageRep'): SketchNative.NSBitmapImageRepClass;
     function NSClassFromString(name: string): unknown;
 }
 

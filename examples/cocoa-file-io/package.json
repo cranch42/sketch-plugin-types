@@ -1,0 +1,13 @@
+{
+  "name": "sketch-example-cocoa-file-io",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ./scripts/bundle.js",
+    "install-plugin": "npm run build && rm -rf \"$HOME/Library/Application Support/com.bohemiancoding.sketch3/Plugins/CocoaFileIO.sketchplugin\" && cp -R build/CocoaFileIO.sketchplugin \"$HOME/Library/Application Support/com.bohemiancoding.sketch3/Plugins/\""
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "sketch-plugin-types": "file:../.."
+  }
+}
