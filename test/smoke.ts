@@ -71,7 +71,7 @@ export function buildPage(doc: dom.Document): dom.Page {
     const page = new dom.Page({ name: 'Generated', parent: doc });
     doc.selectedPage = page;
 
-    const frame = dom.Group.Frame({
+    const frame = new dom.Group.Frame({
         parent: page,
         name: 'Frame',
         frame: new dom.Rectangle(0, 0, 320, 640),

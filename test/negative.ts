@@ -75,6 +75,21 @@ for (const layer of _sel) {
     void n;
 }
 
+// Group.Frame must be invoked with `new` — callable form throws at runtime.
+// @ts-expect-error Group.Frame is constructor-only
+const _bad6 = dom.Group.Frame({});
+void _bad6;
+
+// Same for Group.Graphic.
+// @ts-expect-error Group.Graphic is constructor-only
+const _bad7 = dom.Group.Graphic({});
+void _bad7;
+
+// ImageData has no public constructor — must go through ImageData.from().
+// @ts-expect-error constructor is private
+const _bad8 = new dom.ImageData();
+void _bad8;
+
 void _bad1;
 void _bad2;
 void _bad3;

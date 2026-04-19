@@ -490,7 +490,14 @@ declare module 'sketch/dom' {
         | Uint8Array
         | ImageData;
 
+    /**
+     * Wrapper around a native image payload. Produced by `ImageData.from(...)`
+     * or by reading `.image` off a layer. There is no public constructor —
+     * `new ImageData()` throws at runtime. Use the static factory.
+     */
     export class ImageData {
+        private constructor();
+
         readonly type: 'ImageData';
         readonly nsimage: SketchNative.NSImage;
         readonly nsdata: SketchNative.NSData;
@@ -628,21 +635,17 @@ declare module 'sketch/dom' {
         adjustToFit(): this;
 
         /**
-         * Callable-or-constructable subclass: sets `groupBehavior` to
-         * `'Frame'`. Works as `new Group.Frame({...})` in modern Sketch.
+         * Constructor that presets `groupBehavior` to `'Frame'`. Must be
+         * invoked with `new` — calling `Group.Frame({...})` without `new`
+         * throws at runtime in modern Sketch.
          */
-        static Frame: {
-            new (properties?: GroupProps): Group;
-            (properties?: GroupProps): Group;
-        };
+        static Frame: new (properties?: GroupProps) => Group;
         /**
-         * Callable-or-constructable subclass: sets `groupBehavior` to
-         * `'Graphic'`. Works as `new Group.Graphic({...})`.
+         * Constructor that presets `groupBehavior` to `'Graphic'`. Must be
+         * invoked with `new` — calling `Group.Graphic({...})` without `new`
+         * throws at runtime.
          */
-        static Graphic: {
-            new (properties?: GroupProps): Group;
-            (properties?: GroupProps): Group;
-        };
+        static Graphic: new (properties?: GroupProps) => Group;
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "name": "sketch-plugin-types",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "TypeScript type definitions for the Sketch app plugin API (sketch/dom, sketch/ui, sketch/settings, sketch/async, sketch/data-supplier) and the Action API.",
   "types": "index.d.ts",
   "exports": {
@@ -60,7 +60,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "tsc -p test/tsconfig.json --noEmit",
-    "lint": "tsc -p tsconfig.json --noEmit"
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "license": "MIT",
   "author": "Nick",

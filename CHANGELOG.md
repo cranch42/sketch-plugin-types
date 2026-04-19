@@ -4,6 +4,28 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] — 2026-04-19
+
+### Fixed
+
+- `Group.Frame` and `Group.Graphic` are now constructor-only (`new …()`).
+  The previous declaration also allowed callable form (`Group.Frame({…})`)
+  which throws at runtime in modern Sketch — the types now reject it at
+  compile time. README already documented this as a gotcha; the type-level
+  enforcement catches up.
+- `ImageData` now has a `private constructor()`. `new ImageData()` is no
+  longer allowed — use the `ImageData.from(…)` static factory instead, as
+  the runtime has always required.
+
+### Added
+
+- `prepublishOnly` script runs `lint` + `test` before every publish so a
+  broken `.d.ts` can never ship again.
+- GitHub Actions CI (`.github/workflows/ci.yml`) runs the full typecheck on
+  Node 18 / 20 / 22 on every push to `main` and every PR.
+- Negative tests cover the `Group.Frame` / `Group.Graphic` / `ImageData`
+  footguns.
+
 ## [0.2.0] — 2026-04-19
 
 ### Added
