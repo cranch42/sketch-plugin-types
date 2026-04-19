@@ -22,10 +22,18 @@
   },
   "typesVersions": {
     "*": {
-      "globals": ["types/globals.d.ts"],
-      "manifest": ["types/manifest.d.ts"],
-      "actions": ["types/actions.d.ts"],
-      "skpm": ["types/skpm/index.d.ts"]
+      "globals": [
+        "types/globals.d.ts"
+      ],
+      "manifest": [
+        "types/manifest.d.ts"
+      ],
+      "actions": [
+        "types/actions.d.ts"
+      ],
+      "skpm": [
+        "types/skpm/index.d.ts"
+      ]
     }
   },
   "bin": {
@@ -58,7 +66,7 @@
   "author": "Nick",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cranch42/sketch-plugin-types.git"
+    "url": "git+https://github.com/cranch42/sketch-plugin-types.git"
   },
   "homepage": "https://github.com/cranch42/sketch-plugin-types#readme",
   "bugs": {
