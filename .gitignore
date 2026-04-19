@@ -10,3 +10,4 @@ CLAUDE.md
 
 # example lockfiles are not portable (file:../.. dep)
 examples/*/package-lock.json
+.claude/

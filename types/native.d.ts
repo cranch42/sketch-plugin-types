@@ -47,7 +47,22 @@ declare namespace SketchNative {
     // NSString
     // ---------------------------------------------------------------------
 
+    /**
+     * `NSStringEncoding` constant. Common values:
+     *  - `NSUTF8StringEncoding` = 4
+     *  - `NSASCIIStringEncoding` = 1
+     *  - `NSUTF16StringEncoding` = 10
+     *  - `NSISOLatin1StringEncoding` = 5
+     */
+    type NSStringEncoding = number;
+
     interface NSStringInstance extends Opaque<'NSString'> {
+        initWithUTF8String_(value: string): NSStringInstance | null;
+        initWithString_(value: NSStringInstance | string): NSStringInstance | null;
+        initWithData_encoding_(
+            data: NSDataInstance,
+            encoding: NSStringEncoding,
+        ): NSStringInstance | null;
         UTF8String(): string;
         length(): number;
         stringByAppendingPathComponent_(component: NSStringInstance | string): NSStringInstance;
@@ -66,6 +81,8 @@ declare namespace SketchNative {
     // ---------------------------------------------------------------------
 
     interface NSURLInstance extends Opaque<'NSURL'> {
+        initWithString_(str: NSStringInstance | string): NSURLInstance | null;
+        initFileURLWithPath_(path: NSStringInstance | string): NSURLInstance;
         absoluteString(): NSStringInstance;
         path(): NSStringInstance;
         scheme(): NSStringInstance | null;
@@ -86,7 +103,20 @@ declare namespace SketchNative {
     /** Options bitmask for `NSData base64EncodedStringWithOptions:`. */
     type NSDataBase64EncodingOptions = number;
 
+    /** Options bitmask for `NSData initWithBase64EncodedString:options:`. */
+    type NSDataBase64DecodingOptions = number;
+
     interface NSDataInstance extends Opaque<'NSData'> {
+        initWithBytes_length_(
+            bytes: Opaque<'ConstVoidPointer'>,
+            length: number,
+        ): NSDataInstance;
+        initWithContentsOfURL_(url: NSURLInstance): NSDataInstance | null;
+        initWithContentsOfFile_(path: NSStringInstance | string): NSDataInstance | null;
+        initWithBase64EncodedString_options_(
+            str: NSStringInstance | string,
+            options: NSDataBase64DecodingOptions,
+        ): NSDataInstance | null;
         length(): number;
         bytes(): Opaque<'ConstVoidPointer'>;
         writeToURL_atomically_(url: NSURLInstance, atomically: boolean): boolean;
@@ -115,6 +145,7 @@ declare namespace SketchNative {
         initWithData_(data: NSDataInstance): NSImageInstance | null;
         initWithContentsOfURL_(url: NSURLInstance): NSImageInstance | null;
         initWithContentsOfFile_(path: NSStringInstance | string): NSImageInstance | null;
+        initWithSize_(size: CGSize): NSImageInstance;
         TIFFRepresentation(): NSDataInstance | null;
         size(): CGSize;
         drawInRect_fromRect_operation_fraction_respectFlipped_hints_(
@@ -143,7 +174,32 @@ declare namespace SketchNative {
     /** Property dictionary passed to `representationUsingType:properties:`. */
     type NSBitmapImageRepProperties = Record<string, unknown>;
 
+    /**
+     * Color-space name string. Common values: `'NSDeviceRGBColorSpace'`,
+     * `'NSCalibratedRGBColorSpace'`, `'NSDeviceGrayColorSpace'`.
+     */
+    type NSColorSpaceName = string;
+
     interface NSBitmapImageRepInstance extends Opaque<'NSBitmapImageRep'> {
+        initWithData_(data: NSDataInstance): NSBitmapImageRepInstance | null;
+        /**
+         * Designated initializer. Pass `null` as `planes` to let the rep
+         * allocate its own pixel buffer — this is the only shape that
+         * crosses the CocoaScript bridge cleanly.
+         * Set `bytesPerRow` and `bitsPerPixel` to `0` for auto.
+         */
+        initWithBitmapDataPlanes_pixelsWide_pixelsHigh_bitsPerSample_samplesPerPixel_hasAlpha_isPlanar_colorSpaceName_bytesPerRow_bitsPerPixel_(
+            planes: Opaque<'NSBitmapDataPlanes'> | null,
+            pixelsWide: number,
+            pixelsHigh: number,
+            bitsPerSample: number,
+            samplesPerPixel: number,
+            hasAlpha: boolean,
+            isPlanar: boolean,
+            colorSpaceName: NSColorSpaceName,
+            bytesPerRow: number,
+            bitsPerPixel: number,
+        ): NSBitmapImageRepInstance | null;
         representationUsingType_properties_(
             type: NSBitmapImageFileType,
             properties: NSBitmapImageRepProperties,

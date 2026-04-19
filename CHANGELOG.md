@@ -4,6 +4,32 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] — 2026-04-19
+
+### Added
+
+Missing `init*` methods on Foundation classes that already shipped
+typed `alloc()`. Before 0.2.2 the `alloc()` return type pointed at an
+instance with no way to initialize it, so authors either had to call
+through class factories (`NSString.stringWithUTF8String_`) or augment
+locally — now the canonical `alloc().initWith…()` pairs type-check
+directly.
+
+- `NSString`: `initWithUTF8String_`, `initWithString_`,
+  `initWithData_encoding_`. New helper alias `NSStringEncoding`.
+- `NSData`: `initWithBytes_length_`, `initWithContentsOfURL_`,
+  `initWithContentsOfFile_`, `initWithBase64EncodedString_options_`.
+  New helper alias `NSDataBase64DecodingOptions`.
+- `NSURL`: `initWithString_`, `initFileURLWithPath_`.
+- `NSImage`: `initWithSize_`.
+- `NSBitmapImageRep`: `initWithData_` and the 10-argument designated
+  initializer
+  `initWithBitmapDataPlanes_pixelsWide_pixelsHigh_bitsPerSample_samplesPerPixel_hasAlpha_isPlanar_colorSpaceName_bytesPerRow_bitsPerPixel_`.
+  New helper alias `NSColorSpaceName`.
+- `test/cocoa.ts` now exercises every new `init*` pair.
+
+Fully backwards compatible — additive change, no signatures removed.
+
 ## [0.2.1] — 2026-04-19
 
 ### Fixed

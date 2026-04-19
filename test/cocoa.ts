@@ -104,6 +104,52 @@ export function readBytes(p: string): number {
 }
 
 // ---------------------------------------------------------------------
+// alloc + init* pairs — the canonical Obj-C instantiation path. These
+// were missing before 0.2.2 even though alloc() already returned a
+// typed instance.
+// ---------------------------------------------------------------------
+
+/** `NSUTF8StringEncoding`. */
+const NSUTF8StringEncoding: SketchNative.NSStringEncoding = 4;
+
+export function decodeUtf8(data: SketchNative.NSDataInstance): string | null {
+    const NSString = NSClassFromString('NSString');
+    const str = NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding);
+    return str ? str.UTF8String() : null;
+}
+
+export function decodeBase64(b64: string): SketchNative.NSDataInstance | null {
+    const NSData = NSClassFromString('NSData');
+    return NSData.alloc().initWithBase64EncodedString_options_(b64, 0);
+}
+
+export function blankCanvas(width: number, height: number): SketchNative.NSImageInstance {
+    const NSImage = NSClassFromString('NSImage');
+    return NSImage.alloc().initWithSize_({ width, height });
+}
+
+export function allocBitmap(
+    width: number,
+    height: number,
+): SketchNative.NSBitmapImageRepInstance | null {
+    const NSBitmapImageRep = NSClassFromString('NSBitmapImageRep');
+    return NSBitmapImageRep
+        .alloc()
+        .initWithBitmapDataPlanes_pixelsWide_pixelsHigh_bitsPerSample_samplesPerPixel_hasAlpha_isPlanar_colorSpaceName_bytesPerRow_bitsPerPixel_(
+            null,
+            width,
+            height,
+            8,
+            4,
+            true,
+            false,
+            'NSDeviceRGBColorSpace',
+            0,
+            0,
+        );
+}
+
+// ---------------------------------------------------------------------
 // NSString path building.
 // ---------------------------------------------------------------------
 
