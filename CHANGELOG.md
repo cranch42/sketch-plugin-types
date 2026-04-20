@@ -4,6 +4,25 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] — 2026-04-20
+
+### Changed
+
+- **README trimmed from 519 to 134 lines.** Long-form guides moved to
+  dedicated `docs/*.md` files, each linked from a navigation table in the
+  README: `docs/skpm.md` (skpm toolchain + polyfilled core modules),
+  `docs/manifest.md` (`defineManifest` + `build-manifest` CLI),
+  `docs/actions.md` (typed action handlers + payload augmentation),
+  `docs/cocoa.md` (Foundation bridge + overloaded `NSClassFromString`).
+  README keeps install, tsconfig, a minimal command, module and examples
+  tables, gotchas, and troubleshooting. Dropped "Common patterns"
+  (duplicated `examples/`) and "Sketch CLI tools" (not about types).
+
+### Packaging
+
+- `files` now includes `docs/` so the tarball stays self-contained when
+  read from `node_modules`. No code or type changes.
+
 ## [0.2.2] — 2026-04-19
 
 ### Added
