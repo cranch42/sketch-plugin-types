@@ -67,8 +67,10 @@ export interface SketchManifestCommand {
      *   `export function start(context) { … }` (named export matching the
      *   handler field).
      *
-     * The mismatch is only reported at runtime (`TypeError: … is not a
-     * function`), not at build time. See `docs/skpm.md`.
+     * A mismatch throws at runtime with `Error: Missing export named
+     * "<handler>". Your command should contain something like
+     * \`export function <handler>() {}\`.` — not at build time. See
+     * `docs/skpm.md`.
      */
     handler?: string;
     /**

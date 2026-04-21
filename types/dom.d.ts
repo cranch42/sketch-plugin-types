@@ -232,12 +232,6 @@ declare module 'sketch/dom' {
         tint?: Partial<Fill>;
         // Text-specific
         alignment?: Text.Alignment;
-        /**
-         * @deprecated Sketch ignores `verticalAlignment` at runtime (logs
-         * `no idea what to do with "verticalAlignment" in Text`). Center a
-         * text layer manually: call `text.adjustToFit()` to get the intrinsic
-         * height, then offset `text.frame.y` against the container.
-         */
         verticalAlignment?: Text.VerticalAlignment;
         kerning?: number | null;
         lineHeight?: number | null;
@@ -283,7 +277,6 @@ declare module 'sketch/dom' {
 
         // Text-specific
         alignment: Text.Alignment;
-        /** @deprecated See `StyleProps.verticalAlignment`. */
         verticalAlignment: Text.VerticalAlignment;
         kerning: number | null;
         lineHeight: number | null;
@@ -836,7 +829,17 @@ declare module 'sketch/dom' {
     export interface TextProps extends LayerProps {
         text?: string;
         alignment?: Text.Alignment;
-        /** @deprecated See `StyleProps.verticalAlignment`. */
+        /**
+         * @deprecated Ignored when passed on the Text-layer constructor —
+         * Sketch treats this as an unknown property on the layer. Assign
+         * it on the `style` instead:
+         * ```ts
+         * const t = new Text({ text: 'hi', style: { verticalAlignment: 'center' } });
+         * // or, after construction:
+         * t.style.verticalAlignment = 'center';
+         * ```
+         * Upstream bug: https://github.com/sketch-hq/SketchAPI/issues/447.
+         */
         verticalAlignment?: Text.VerticalAlignment;
         lineSpacing?: Text.LineSpacing;
         fixedWidth?: boolean;

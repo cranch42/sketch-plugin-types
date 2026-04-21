@@ -4,6 +4,35 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] — 2026-04-21
+
+Post-release fact-check pass — three inaccuracies shipped in 0.3.0 were
+audited against `sketch-hq/SketchAPI` and `skpm/skpm` sources and
+corrected here. No API changes.
+
+### Fixed
+
+- **`verticalAlignment` is no longer `@deprecated` on `StyleProps` or
+  `Style`.** Only the `Text`-layer path (`new Text({ verticalAlignment })`
+  or `textLayer.verticalAlignment =`) is broken — assigning on the
+  *Style* works (`text.style.verticalAlignment = 'center'` is the
+  supported path, implemented in `Source/dom/style/Text.js`). The
+  `@deprecated` tag now lives only on `TextProps.verticalAlignment`
+  with jsdoc pointing at the working alternative and
+  [sketch-hq/SketchAPI#447](https://github.com/sketch-hq/SketchAPI/issues/447).
+- **`SketchManifestCommand.handler` jsdoc cited the wrong runtime
+  error.** The previous text said `TypeError: … is not a function`;
+  skpm actually throws `Error: Missing export named "<handler>". Your
+  command should contain something like \`export function <handler>() {}\`.`
+  from `packages/builder/src/utils/webpackHeaderFooterPlugin.js`.
+- **`docs/skpm.md` "Not polyfilled" section overstated the `fetch`
+  gap.** `@skpm/builder` *does* inject `fetch` via webpack's
+  `ProvidePlugin` → `sketch-polyfill-fetch`, so the function works
+  out of the box. What's still missing are the WHATWG classes
+  `Request` / `Response` / `Headers` — the polyfill returns plain
+  objects, not constructor instances. `FormData` is also injected
+  (added to the section for completeness).
+
 ## [0.3.0] — 2026-04-21
 
 Driven by early-adopter feedback: the clipboard was the single most-hit

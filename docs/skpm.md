@@ -142,7 +142,9 @@ Sketch runs plugins in a bare JavaScriptCore context. A number of things most JS
   const data = NSString.stringWithUTF8String_(input).dataUsingEncoding_(4); // NSUTF8StringEncoding
   ```
   Or vendor a small pure-JS implementation (`fast-text-encoding`).
-- `fetch` / `Request` / `Response` / `Headers` — not native. skpm recommends [`sketch-polyfill-fetch`](https://github.com/skpm/sketch-polyfill-fetch), which wraps `NSURLSession`. No types ship here.
+- `fetch` — **injected** by `@skpm/builder` via webpack's `ProvidePlugin` → [`sketch-polyfill-fetch`](https://github.com/skpm/sketch-polyfill-fetch) (wraps `NSURLSession`). The function works out of the box; no types ship here, so write `declare const fetch: (...args: any[]) => Promise<any>;` or narrow locally.
+- `Request` / `Response` / `Headers` — **not native**. `sketch-polyfill-fetch` returns plain objects with `ok` / `status` / `headers` / `text()` / `json()` but is *not* a WHATWG implementation — `new Response(...)` / `new Headers(...)` / `new Request(...)` all throw. Anything that expects `instanceof Response` will break.
+- `FormData` — injected by the same `ProvidePlugin`. Usable as a constructor.
 - `URL` / `URLSearchParams` — `URL` is polyfilled via the `url` module, but the WHATWG globals are not injected on `globalThis`. Import what you need from `'url'`.
 - `Promise` — present on modern Sketch, but there is no native microtask queue for long-running commands. If your command exits synchronously the promise resolver never fires. Use `Async.createFiber()` to keep the runtime alive (see [developer.sketch.com](https://developer.sketch.com/reference/api/#async)).
 - `queueMicrotask` / `setImmediate` / process ticks — missing. Use `setTimeout(fn, 0)`.
