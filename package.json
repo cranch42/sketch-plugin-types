@@ -1,6 +1,6 @@
 {
   "name": "sketch-plugin-types",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "TypeScript type definitions for the Sketch app plugin API (sketch/dom, sketch/ui, sketch/settings, sketch/async, sketch/data-supplier) and the Action API.",
   "types": "index.d.ts",
   "exports": {

@@ -1,5 +1,22 @@
 # Building with skpm
 
+> **Status note (2026-04).** `@skpm/builder` is in maintenance mode: the
+> latest release is `0.9.5` published **2023-10-10**, the parent repo's
+> last commit is the same day, and the bundler still targets webpack 4.
+> The runtime pieces Sketch needs — `sketch-module-web-view`,
+> `sketch-polyfill-fetch` — are still patched actively, but the build
+> tooling is effectively frozen. It works; it just isn't evolving.
+>
+> For a **greenfield** plugin, consider bypassing skpm entirely and
+> building directly onto the `.sketchplugin` bundle layout with `tsc` +
+> a small bundle script (~20 lines) or `esbuild`. See
+> [`examples/hello-world/`](../examples/hello-world/) for the minimal
+> template; several production plugins in the wild use this approach.
+> You keep `sketch-plugin-types` either way.
+>
+> If you already have a skpm project, or you want `skpm watch` / `skpm
+> publish` ergonomics, the rest of this guide still applies.
+
 [`skpm`](https://github.com/skpm/skpm) is the standard Sketch plugin toolchain. It scaffolds a project, bundles your code (webpack + babel), installs the plugin into Sketch, watches files on save, and publishes releases.
 
 ## Setup

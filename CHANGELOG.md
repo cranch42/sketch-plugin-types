@@ -4,6 +4,26 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] — 2026-04-22
+
+Docs-only release. Acknowledges the current state of the skpm toolchain
+and surfaces the plain-`tsc` / `esbuild` alternative for greenfield
+plugins. No API changes — `sketch-plugin-types/skpm` subpath stays as
+is, since the polyfill surface it types is itself frozen and therefore
+correct indefinitely.
+
+### Changed
+
+- **`docs/skpm.md` — added a status note at the top.** `@skpm/builder`
+  is in maintenance (`0.9.5`, 2023-10-10, still on webpack 4). The
+  runtime bits (`sketch-module-web-view`, `sketch-polyfill-fetch`) are
+  still actively patched; the build tooling is not. For new plugins,
+  consider building directly onto the `.sketchplugin` bundle layout
+  with `tsc` + a bundle script — see `examples/hello-world/`.
+- **README — new "Two build paths" subsection.** Explicit choice
+  between skpm (maintenance / compat) and plain `tsc`/`esbuild`
+  (recommended for new plugins). Both paths consume the same types.
+
 ## [0.3.1] — 2026-04-21
 
 Post-release fact-check pass — three inaccuracies shipped in 0.3.0 were

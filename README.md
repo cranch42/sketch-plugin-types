@@ -76,7 +76,14 @@ export function onRun(_ctx: SketchPluginContext): void {
 | Typed Action handlers + augmenting payloads | [docs/actions.md](./docs/actions.md) |
 | Cocoa / Objective-C APIs | [docs/cocoa.md](./docs/cocoa.md) |
 
-Building without skpm: see [`examples/hello-world/`](./examples/hello-world/) — plain `tsc` + a ~20-line `scripts/bundle.js` shim.
+### Two build paths
+
+You can bundle a plugin with `sketch-plugin-types` two ways:
+
+- **skpm** (*maintenance — frozen at `@skpm/builder@0.9.5`, 2023-10*) — still works, still widely used. Pick this if you have an existing skpm project or want `skpm watch` / `skpm publish` ergonomics. See [docs/skpm.md](./docs/skpm.md).
+- **Plain `tsc` / `esbuild`** (*recommended for new plugins in 2026*) — ~20-line bundle script writes directly into the `.sketchplugin/Contents/Sketch/` layout. No webpack, no babel, no frozen deps. See [`examples/hello-world/`](./examples/hello-world/) for the minimal template used by the other seven examples in this repo.
+
+Both paths consume the same types.
 
 ## Modules
 
