@@ -54,9 +54,28 @@ export interface SketchManifestCommand {
     identifier: string;
     /** Relative path inside `Contents/Sketch/`. */
     script: string;
-    /** Top-level function name in `script` to invoke. Defaults to `onRun`. */
+    /**
+     * Top-level function name in `script` to invoke. Defaults to `onRun`.
+     *
+     * When bundling with `@skpm/builder`, the export shape of the command
+     * module is tied to this name:
+     *
+     * - `handler: "onRun"` (or omitted) — skpm expects
+     *   `export default function (context) { … }`. A named `export function
+     *   onRun` is NOT picked up.
+     * - any other value, e.g. `handler: "start"` — skpm expects
+     *   `export function start(context) { … }` (named export matching the
+     *   handler field).
+     *
+     * The mismatch is only reported at runtime (`TypeError: … is not a
+     * function`), not at build time. See `docs/skpm.md`.
+     */
     handler?: string;
-    /** Advanced handler map. Takes precedence over `handler`. */
+    /**
+     * Advanced handler map. Takes precedence over `handler`. Each entry
+     * must resolve to a **named** export in the command module, regardless
+     * of the name — `export default` is ignored here.
+     */
     handlers?: SketchManifestHandlers;
     /** Keyboard shortcut, e.g. `"cmd shift k"`. Must include at least one modifier. */
     shortcut?: SketchShortcut;

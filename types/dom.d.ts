@@ -232,6 +232,12 @@ declare module 'sketch/dom' {
         tint?: Partial<Fill>;
         // Text-specific
         alignment?: Text.Alignment;
+        /**
+         * @deprecated Sketch ignores `verticalAlignment` at runtime (logs
+         * `no idea what to do with "verticalAlignment" in Text`). Center a
+         * text layer manually: call `text.adjustToFit()` to get the intrinsic
+         * height, then offset `text.frame.y` against the container.
+         */
         verticalAlignment?: Text.VerticalAlignment;
         kerning?: number | null;
         lineHeight?: number | null;
@@ -277,6 +283,7 @@ declare module 'sketch/dom' {
 
         // Text-specific
         alignment: Text.Alignment;
+        /** @deprecated See `StyleProps.verticalAlignment`. */
         verticalAlignment: Text.VerticalAlignment;
         kerning: number | null;
         lineHeight: number | null;
@@ -728,6 +735,31 @@ declare module 'sketch/dom' {
         sharedStyle: SharedStyle | null;
         sharedStyleId: string | null;
 
+        /**
+         * Build a `ShapePath` from an SVG path `d` attribute.
+         *
+         * @remarks
+         * The factory normalizes the path: the resulting `ShapePath.frame`
+         * matches the bounding box of the drawn path, and every
+         * `CurvePoint.point` / `curveFrom` / `curveTo` is stored as a
+         * percentage of that frame (range `0`–`1`), not in user-space
+         * points. Round-tripping through `getSVGPath()` re-emits the path
+         * in absolute coordinates, so two calls to `fromSVGPath` on the
+         * round-tripped string give you a shape whose `.points` are
+         * identical but whose `.frame` may differ if the original path had
+         * leading whitespace or a non-zero origin.
+         *
+         * Supports the full `MoveTo` / `LineTo` / `CurveTo` / `ArcTo` /
+         * `ClosePath` command set (`M/m L/l C/c S/s Q/q T/t A/a Z/z`).
+         *
+         * ```ts
+         * const heart = ShapePath.fromSVGPath(
+         *   'M10,30 A20,20 0,0,1 50,30 A20,20 0,0,1 90,30 Q90,60 50,90 Q10,60 10,30 Z',
+         * );
+         * heart.frame.x = 100;            // absolute in points
+         * heart.points[0].point;          // { x: 0, y: 0.33 } — percent of frame
+         * ```
+         */
         static fromSVGPath(svgPath: string): ShapePath;
 
         getSVGPath(): string;
@@ -804,6 +836,7 @@ declare module 'sketch/dom' {
     export interface TextProps extends LayerProps {
         text?: string;
         alignment?: Text.Alignment;
+        /** @deprecated See `StyleProps.verticalAlignment`. */
         verticalAlignment?: Text.VerticalAlignment;
         lineSpacing?: Text.LineSpacing;
         fixedWidth?: boolean;

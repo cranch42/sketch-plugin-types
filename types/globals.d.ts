@@ -100,6 +100,7 @@ declare global {
     function NSClassFromString(name: 'NSString'): SketchNative.NSStringClass;
     function NSClassFromString(name: 'NSFileManager'): SketchNative.NSFileManagerClass;
     function NSClassFromString(name: 'NSBitmapImageRep'): SketchNative.NSBitmapImageRepClass;
+    function NSClassFromString(name: 'NSPasteboard'): SketchNative.NSPasteboardClass;
     function NSClassFromString(name: string): unknown;
 }
 

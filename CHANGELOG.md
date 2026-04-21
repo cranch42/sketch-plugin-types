@@ -4,6 +4,62 @@ All notable changes to this package are documented here. Format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-04-21
+
+Driven by early-adopter feedback: the clipboard was the single most-hit
+gap, plus a round of jsdoc / docs fixes for things the types quietly
+lied about or under-documented.
+
+### Added
+
+- **`NSPasteboard` in the typed Cocoa bridge.** `NSPasteboardInstance`
+  covers the realistic plugin surface — `clearContents`,
+  `declareTypes_owner_` (accepts a JS array, auto-bridged to `NSArray`),
+  `setString_forType_` / `setData_forType_`, `stringForType_` /
+  `dataForType_`, `types`, `availableTypeFromArray_`, `changeCount`.
+  `NSPasteboardClass` exposes `generalPasteboard`, `pasteboardWithName_`,
+  `pasteboardWithUniqueName`. New branded alias `NSPasteboardType` for
+  UTI strings (`'public.utf8-plain-text'`, `'public.html'`, …).
+- **`NSClassFromString('NSPasteboard')` overload** in `globals.d.ts`
+  returns `NSPasteboardClass` directly — no cast.
+- **`examples/clipboard-roundtrip/`** — new runnable plugin with two
+  commands (read the pasteboard into a UI alert; copy selection names
+  into the pasteboard). Same bundle pattern as `cocoa-file-io`.
+- **`test/cocoa.ts`** — new cases for the pasteboard: read/write/preview,
+  `changeCount` polling, named pasteboards.
+
+### Changed
+
+- **`Text.verticalAlignment` is now `@deprecated`.** Sketch ignores the
+  property at runtime (`no idea what to do with "verticalAlignment" in
+  Text`). The jsdoc points at the working alternative: call
+  `text.adjustToFit()` and offset `text.frame.y` manually. Marked in all
+  three declaration sites (`StyleProps`, `Style`, `TextProps`).
+- **`ShapePath.fromSVGPath` has `@remarks`.** Documented the non-obvious
+  normalization: the returned `frame` matches the path's bounding box and
+  every `CurvePoint` coordinate is stored as a percentage of that frame
+  (`0`–`1`), not in points. Previously one-liner; now includes a worked
+  example.
+- **`SketchManifestCommand.handler` jsdoc spells out the skpm export
+  convention.** `handler: "onRun"` maps to `export default`; any other
+  value maps to a named export of the same name. Mismatch only surfaces
+  as a runtime `TypeError`, so the hint belongs in the type.
+- **`docs/skpm.md` — softened the "TS out of the box" claim.** In
+  practice `@skpm/builder@0.9.5` is flaky about `.ts` sources; added a
+  minimal working `webpack.skpm.config.js` with `ts-loader@8` (webpack 4)
+  and a note on the `webpack-merge.smart` footgun.
+- **`docs/skpm.md` — new "Not polyfilled — shim yourself" section.**
+  Lists globals and APIs that the bare JavaScriptCore context lacks and
+  skpm does not fill in: `structuredClone`, `TextEncoder` /
+  `TextDecoder`, `fetch`, WHATWG `URL` globals, `queueMicrotask`,
+  `crypto.subtle`, `fs`. Each entry has a shim hint.
+
+### Compatibility
+
+Fully backwards compatible with 0.2.x. `NSPasteboard` is additive and
+the `@deprecated` flag is advisory only — existing assignments to
+`verticalAlignment` still compile.
+
 ## [0.2.3] — 2026-04-20
 
 ### Changed

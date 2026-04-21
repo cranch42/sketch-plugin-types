@@ -1,0 +1,33 @@
+{
+  "name": "Clipboard Roundtrip",
+  "identifier": "com.example.sketch-plugin-types.clipboard-roundtrip",
+  "version": "0.1.0",
+  "description": "Read and write the system pasteboard through the typed NSPasteboard bridge.",
+  "author": "sketch-plugin-types",
+  "compatibleVersion": "99",
+  "bundleVersion": 1,
+  "disableCocoaScriptPreprocessor": true,
+  "commands": [
+    {
+      "name": "Paste Clipboard into Alert",
+      "identifier": "com.example.sketch-plugin-types.clipboard-roundtrip.read",
+      "script": "read-clipboard.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt v"
+    },
+    {
+      "name": "Copy Selection Names",
+      "identifier": "com.example.sketch-plugin-types.clipboard-roundtrip.write",
+      "script": "copy-selection.js",
+      "handler": "onRun",
+      "shortcut": "cmd shift alt c"
+    }
+  ],
+  "menu": {
+    "title": "Clipboard Roundtrip",
+    "items": [
+      "com.example.sketch-plugin-types.clipboard-roundtrip.read",
+      "com.example.sketch-plugin-types.clipboard-roundtrip.write"
+    ]
+  }
+}

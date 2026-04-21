@@ -249,6 +249,80 @@ declare namespace SketchNative {
     type NSFileManager = NSFileManagerInstance;
 
     // ---------------------------------------------------------------------
+    // NSPasteboard
+    // ---------------------------------------------------------------------
+
+    /**
+     * Uniform-type identifier used as a pasteboard "type". Common values:
+     *  - `'public.utf8-plain-text'` — the modern `NSPasteboardTypeString`
+     *  - `'public.html'` — the modern `NSPasteboardTypeHTML`
+     *  - `'public.url'` — `NSPasteboardTypeURL`
+     *  - `'public.tiff'`, `'public.png'` — image payloads
+     *  - legacy `'NSStringPboardType'` still works on macOS 10.14+
+     *
+     * Declared as a branded string so arbitrary UTI strings type-check
+     * without losing the documentation pointer to the common constants.
+     */
+    type NSPasteboardType = string & { readonly __pasteboardType?: unique symbol };
+
+    interface NSPasteboardInstance extends Opaque<'NSPasteboard'> {
+        /** Remove every item currently on the pasteboard. Returns the new change count. */
+        clearContents(): number;
+
+        /**
+         * Advertise the set of types this owner plans to write. Must be
+         * called before `setString_forType_` / `setData_forType_` on a
+         * non-general pasteboard, or when writing multiple types in a batch.
+         * Pass `null` as owner for the common "fire and forget" case.
+         *
+         * Accepts a JS array — CocoaScript auto-bridges it to `NSArray`.
+         */
+        declareTypes_owner_(
+            types: readonly NSPasteboardType[] | Opaque<'NSArray'>,
+            owner: NSObject | null,
+        ): number;
+
+        /** Write a string payload for the given UTI. Returns `true` on success. */
+        setString_forType_(
+            string: NSStringInstance | string,
+            dataType: NSPasteboardType,
+        ): boolean;
+        /** Write a raw data payload for the given UTI. */
+        setData_forType_(
+            data: NSDataInstance,
+            dataType: NSPasteboardType,
+        ): boolean;
+
+        /** Read a string payload. Returns `null` when the type is absent. */
+        stringForType_(dataType: NSPasteboardType): NSStringInstance | null;
+        /** Read a raw data payload. Returns `null` when the type is absent. */
+        dataForType_(dataType: NSPasteboardType): NSDataInstance | null;
+
+        /** Types currently on the pasteboard. Elements are `NSPasteboardType`. */
+        types(): Opaque<'NSArray'> | null;
+        /** First type from `types` that also appears in the passed array. */
+        availableTypeFromArray_(
+            types: readonly NSPasteboardType[] | Opaque<'NSArray'>,
+        ): NSPasteboardType | null;
+
+        /**
+         * Monotonically increasing counter bumped on every write. Read it
+         * before and after a user action to detect external changes
+         * without polling the payload itself.
+         */
+        changeCount(): number;
+    }
+    interface NSPasteboardClass {
+        /** Shared pasteboard that drives the system-wide Cmd+C / Cmd+V. */
+        generalPasteboard(): NSPasteboardInstance;
+        /** Named, app-private pasteboard. Use for drag sessions or per-plugin channels. */
+        pasteboardWithName_(name: NSStringInstance | string): NSPasteboardInstance;
+        /** Ephemeral pasteboard discarded when the app quits. */
+        pasteboardWithUniqueName(): NSPasteboardInstance;
+    }
+    type NSPasteboard = NSPasteboardInstance;
+
+    // ---------------------------------------------------------------------
     // Sketch internals (MS*) — stay opaque for now.
     // ---------------------------------------------------------------------
 

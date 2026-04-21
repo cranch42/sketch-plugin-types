@@ -179,6 +179,63 @@ interface NSBezierPathClass {
     bezierPath(): NSBezierPathInstance;
 }
 
+// ---------------------------------------------------------------------
+// NSPasteboard — the typical plugin use case is reading whatever the
+// user copied and writing something back after a command completes.
+// Exercise both the general pasteboard and a named one.
+// ---------------------------------------------------------------------
+
+/** `NSPasteboardTypeString` — modern UTI for UTF-8 plain text. */
+const NSPasteboardTypeString: SketchNative.NSPasteboardType = 'public.utf8-plain-text';
+/** `NSPasteboardTypeHTML` — rich HTML fragment. */
+const NSPasteboardTypeHTML: SketchNative.NSPasteboardType = 'public.html';
+
+/** Read the current clipboard text, or null if the user has copied something else. */
+export function readClipboardText(): string | null {
+    const NSPasteboard = NSClassFromString('NSPasteboard');
+    const pb = NSPasteboard.generalPasteboard();
+    const str = pb.stringForType_(NSPasteboardTypeString);
+    return str ? str.UTF8String() : null;
+}
+
+/** Overwrite the clipboard with a plain-text payload. */
+export function writeClipboardText(value: string): boolean {
+    const NSPasteboard = NSClassFromString('NSPasteboard');
+    const pb = NSPasteboard.generalPasteboard();
+    pb.clearContents();
+    pb.declareTypes_owner_([NSPasteboardTypeString], null);
+    return pb.setString_forType_(value, NSPasteboardTypeString);
+}
+
+/** Pick the richest payload the clipboard carries right now. */
+export function pickBestPayload(): { type: string; value: string } | null {
+    const NSPasteboard = NSClassFromString('NSPasteboard');
+    const pb = NSPasteboard.generalPasteboard();
+    const best = pb.availableTypeFromArray_([
+        NSPasteboardTypeHTML,
+        NSPasteboardTypeString,
+    ]);
+    if (!best) return null;
+    const str = pb.stringForType_(best);
+    if (!str) return null;
+    return { type: best, value: str.UTF8String() };
+}
+
+/** Watch the pasteboard for external changes without polling the payload. */
+export function hasChangedSince(previousCount: number): boolean {
+    const NSPasteboard = NSClassFromString('NSPasteboard');
+    return NSPasteboard.generalPasteboard().changeCount() !== previousCount;
+}
+
+/** Named pasteboard — useful for drag sessions or inter-plugin channels. */
+export function writeToNamedChannel(channel: string, value: string): boolean {
+    const NSPasteboard = NSClassFromString('NSPasteboard');
+    const pb = NSPasteboard.pasteboardWithName_(channel);
+    pb.clearContents();
+    pb.declareTypes_owner_([NSPasteboardTypeString], null);
+    return pb.setString_forType_(value, NSPasteboardTypeString);
+}
+
 export function makeTriangle(): NSBezierPathInstance {
     // Pattern 1: opaque branded tag when you don't need methods.
     const raw = NSClassFromString('NSBezierPath');
